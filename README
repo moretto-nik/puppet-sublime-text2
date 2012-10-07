@@ -1,0 +1,10 @@
+Installation de sublime text 2 via puppet
+
+
+Installation du dmg
+Installation du package manager
+copy http://sublime.wbond.net/Package%20Control.sublime-package > /Users/benji07/Library/Application Support/Sublime Text 2/Packages
+
+Installation d'une liste de plugin (voir pour faire un type)
+
+Ajour du fichier de configuration
