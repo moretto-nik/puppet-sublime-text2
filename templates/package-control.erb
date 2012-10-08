@@ -1,0 +1,9 @@
+{
+    "auto_upgrade_last_run": 0,
+    "installed_packages":
+    [
+        <% plugins.each do |plugin| %>
+        "<%= plugin -%>"<% if plugin != plugins.last %>,<% end %>
+        <% end %>
+    ]
+}
