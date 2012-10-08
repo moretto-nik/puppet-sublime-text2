@@ -12,10 +12,16 @@ class sublime-text2 ($source, $cmdLine = false, $plugins = []) {
         source => $source
     }
 
+    file { "/Users/${id}/.sublime-settings":
+        ensure => present,
+        replace => false,
+        content => template('sublime-text2/sublime-settings.erb')
+    }
+
     file { "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings":
         ensure => link,
         force => true,
-        target => '/Users/${id}/.sublime-settings',
+        target => "/Users/${id}/.sublime-settings",
         require => Package['Sublime Text 2']
     }
 
@@ -28,7 +34,7 @@ class sublime-text2 ($source, $cmdLine = false, $plugins = []) {
     file { "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/User/Package Control.sublime-settings":
         ensure => link,
         force => true,
-        target => '/Users/${id}/.sublime-packages',
+        target => "/Users/${id}/.sublime-packages",
         require => Package['Sublime Text 2']
     }
 
@@ -40,10 +46,9 @@ class sublime-text2 ($source, $cmdLine = false, $plugins = []) {
         }
     }
 
-    file { "Package Control.sublime-package":
-        path => "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/Package Control.sublime-package",
-        ensure => present,
-        source => "http://sublime.wbond.net/Package%20Control.sublime-package",
+    download { "Package Control.sublime-package":
+        url => "http://sublime.wbond.net/Package%20Control.sublime-package",
+        file => "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/Package Control.sublime-package",
         require => Package['Sublime Text 2']
     }
 }
