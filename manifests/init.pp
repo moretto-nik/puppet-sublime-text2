@@ -46,9 +46,9 @@ class sublime-text2 ($source, $cmdLine = false, $plugins = []) {
         }
     }
 
-    download { "Package Control.sublime-package":
+    sublime-text2::download-package { "Package Control":
         url => "http://sublime.wbond.net/Package%20Control.sublime-package",
-        file => "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/Package Control.sublime-package",
+        filename => "Package%20Control.sublime-package",
         require => Package['Sublime Text 2']
     }
 }
