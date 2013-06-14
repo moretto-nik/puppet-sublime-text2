@@ -5,48 +5,57 @@
 #   cmdLine => true,
 #   plugins => []
 # }
-class sublime-text2 ($source, $cmdLine = false, $plugins = []) {
+class sublime-text2 ($user, $source, $cmdLine = false, $plugins = []) {
     package { 'Sublime Text 2':
         provider => appdmg,
         ensure => present,
         source => $source
     }
 
-    file { "/Users/${id}/.sublime-settings":
+    file { ["/Users/$user/Library/Application Support/Sublime Text 2",
+            "/Users/$user/Library/Application Support/Sublime Text 2/Packages",
+            "/Users/$user/Library/Application Support/Sublime Text 2/Packages/User",
+            "/Users/$user/bin"]:
+      ensure => directory,
+      require => Package['Sublime Text 2']
+    }
+
+    file { "/Users/$user/.sublime-settings":
         ensure => present,
         replace => false,
         content => template('sublime-text2/sublime-settings.erb')
     }
 
-    file { "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings":
+    file { "/Users/$user/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings":
         ensure => link,
         force => true,
-        target => "/Users/${id}/.sublime-settings",
-        require => Package['Sublime Text 2']
+        target => "/Users/$user/.sublime-settings",
+        require => File["/Users/$user/Library/Application Support/Sublime Text 2/Packages/User"]
     }
 
-    file { "/Users/${id}/.sublime-packages":
+    file { "/Users/$user/.sublime-packages":
         ensure => present,
         replace => false,
         content => template('sublime-text2/package-control.erb')
     }
 
-    file { "/Users/${id}/Library/Application Support/Sublime Text 2/Packages/User/Package Control.sublime-settings":
+    file { "/Users/$user/Library/Application Support/Sublime Text 2/Packages/User/Package Control.sublime-settings":
         ensure => link,
         force => true,
-        target => "/Users/${id}/.sublime-packages",
-        require => Package['Sublime Text 2']
+        target => "/Users/$user/.sublime-packages",
+        require => File["/Users/$user/Library/Application Support/Sublime Text 2/Packages/User"]
     }
 
     if $cmdLine {
-        file { "/Users/${id}/bin/subl":
+        file { "/Users/$user/bin/subl":
             ensure => link,
-            require => Package['Sublime Text 2'],
+            require => File["/Users/$user/bin"],
             target => '/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl'
         }
     }
 
     sublime-text2::download-package { "Package Control":
+        user => $user,
         url => "http://sublime.wbond.net/Package%20Control.sublime-package",
         filename => "Package%20Control.sublime-package",
         require => Package['Sublime Text 2']

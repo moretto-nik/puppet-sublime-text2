@@ -1,6 +1,6 @@
-define sublime-text2::download-package($url, $filename) {
+define sublime-text2::download-package($user, $url, $filename) {
 
-    $packagePath = "/Users/${id}/Library/Application Support/Sublime Text 2/Packages"
+    $packagePath = "/Users/$user/Library/Application Support/Sublime Text 2/Packages"
 
     exec { "curl -O ${url}":
         cwd     => "/var/tmp",
